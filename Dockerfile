@@ -52,26 +52,32 @@ COPY ${CONFIG_DIR}/tmux/tmux.conf ${MY_HOME}/.tmux.conf
 
 RUN chown -R ${MY_USER}:${MY_USER} ${MY_HOME}
 
-# install utils (like git, vim, nano, ...)
-RUN apt-get install -y     \
-      cmake            \
-      cmake-curses-gui \
-      curl             \
-      git              \
-      gnupg2           \
-      keychain         \
-      myrepos          \
-      nano             \
-      python3          \
-      python3-pip      \
-      rsync            \
-      tmux             \
-      vim              \
-      wget             \
-      iputils-ping
+# install tools (like git, vim, nano, ...)
+ARG INSTALL_TERMINAL_TOOLS=true
+RUN if [ "$INSTALL_TERMINAL_TOOLS" = "true" ]; then \ 
+        apt-get install -y   \
+            cmake            \
+            cmake-curses-gui \
+            curl             \
+            git              \
+            gnupg2           \
+            keychain         \
+            myrepos          \
+            nano             \
+            python3          \
+            python3-pip      \
+            rsync            \
+            tmux             \
+            vim              \
+            wget             \
+            iputils-ping;    \
+    fi 
       
 # For Stage
-RUN apt-get install -y libjpeg8-dev libpng-dev libglu1-mesa-dev libltdl-dev libfltk1.1-dev
+ARG INSTALL_STAGE=true
+RUN if [ "$INSTALL_STAGE" = "true" ]; then \ 
+        apt-get install -y libjpeg8-dev libpng-dev libglu1-mesa-dev libltdl-dev libfltk1.1-dev;    \
+    fi 
 
 # install xubuntu-desktop
 ARG INSTALL_XFCE=true
