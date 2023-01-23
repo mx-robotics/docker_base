@@ -1,11 +1,11 @@
 ROS_DISTRO = humble
 OWNER = mxrobotics
-PREFIX = general
+PREFIX = mx
  
 
 PERSISTENT_GZ  = ${HOME}/tmp/${OWNER}/${ROS_DISTRO}-gazebo
 PROJECT_DIR = $(shell cd ..; pwd)
-PROJECT_DIR_NAME = MR_DIR
+PROJECT_DIR_NAME = MX_DIR # define a project name enviroment variable
 HOSTNAME := $(shell hostname)
 RUN = deploy
 	
