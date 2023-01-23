@@ -13,5 +13,8 @@ apt-get install -y code
 sudo -u ${MY_USER} code --install-extension ms-vscode.cpptools
 sudo -u ${MY_USER} code --install-extension ms-vscode.cmake-tools
 sudo -u ${MY_USER} code --install-extension ms-python.python
+sudo -u ${MY_USER} code --install-extension ms-vscode.makefile-tools
+#sudo -u ${MY_USER} code --install-extension ms-azuretools.vscode-docker
 #sudo -u ${MY_USER} code --install-extension nonanonno.vscode-ros2
+#sudo -u ${MY_USER} code --install-extension JaehyunShim.vscode-ros2
 #sudo -u ${MY_USER} code --install-extension platformio.platformio-ide
