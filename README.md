@@ -1,11 +1,13 @@
 # docker_base
-This repo hold docker files to crate a docker container for ROS with a multiple options on the build.
+This repo hold docker files to crate a docker container with ROS2 (humble) and supports a multiple options on the build.
 
 * XFCE Desktop 
 * TURBO VNC Server
 * VSCode
 * ROS NAV2 
 * GAZEBO
+
+For details checkout the Makefile
 
 ## make
 A make file is used to create and run the container
