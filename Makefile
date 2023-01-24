@@ -39,7 +39,7 @@ build-base:
 													        --build-arg INSTALL_GAZEBO=true \
 													        --build-arg INSTALL_VNC=true \
 															--build-arg INSTALL_NAV2=true \
-	                                                        .
+															-f Dockerfile-base .
 
 build: build-base
 

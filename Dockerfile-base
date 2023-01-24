@@ -145,14 +145,14 @@ RUN mkdir -p ${PROJECTS_DIR} && \
     chown -R ${MY_USER}:${MY_USER} ${PROJECTS_DIR}
 
 RUN echo "export PROJECTS_DIR=${PROJECTS_DIR}" >> ~/.bashrc && \    
-	echo "export MY_PROJECT_DIR" >> ~/.bashrc # this is just a space holder for later images && \ 
+	echo "export MY_PROJECT_DIR" >> ~/.bashrc && \ 
 	echo "if [ -f "env.sh" ]; then source env.sh; fi" >> ~/.bashrc && \    
     echo "colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Debug" >> ~/.bash_history && \
     echo "cd ${PROJECTS_DIR}" >> ~/.bash_history
 
 USER ${MY_USER}
 RUN echo "export PROJECTS_DIR=${PROJECTS_DIR}" >> ~/.bashrc && \    
-	echo "export MY_PROJECT_DIR" >> ~/.bashrc # this is just a space holder for later images && \ 
+	echo "export MY_PROJECT_DIR" >> ~/.bashrc && \ 
 	echo "if [ -f "env.sh" ]; then source env.sh; fi" >> ~/.bashrc && \    
     echo "colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Debug" >> ~/.bash_history && \
     echo "cd ${PROJECTS_DIR}" >> ~/.bash_history
