@@ -1,0 +1,28 @@
+ARG ROS_DISTRO=humble
+ARG OWNER=
+ARG PREFIX=
+ARG BASE_CONTAINER=
+ARG ROOT_CONTAINER=$OWNER/$BASE_CONTAINER 
+
+FROM $ROOT_CONTAINER
+ARG PROJECT_DIR
+ARG PROJECT_DIR_NAME
+ENV PROJECT_DIR=${PROJECT_DIR}
+ENV PROJECT_DIR_NAME=${PROJECT_DIR_NAME}
+
+USER root
+RUN mkdir -p ${PROJECT_DIR}
+COPY --chown=${MY_USER}:${MY_USER} . ${PROJECT_DIR}
+
+USER ${MY_USER}
+RUN sed -i 's^MY_PROJECT_DIR^'"${PROJECT_DIR_NAME}"'='"${PROJECT_DIR}"'^g' ~/.bashrc
+RUN /bin/bash -c "cd $PROJECT_DIR; make build-clean; make build-debug"
+
+RUN echo 'ros2 topic list' >> ~/.bash_history && \
+    echo 'tmux new -s gz \; split-window -v \; select-pane -t 1 \; split-window -v \; select-pane -t 0 \; attach' >> ~/.bash_history
+
+USER ${MY_USER}
+WORKDIR ${PROJECT_DIR}
+ENV HOME=${MY_HOME}
+CMD /bin/bash
+#CMD /opt/TurboVNC/bin/vncserver  -localhost -securitytypes NONE :1 && tail -f /dev/null

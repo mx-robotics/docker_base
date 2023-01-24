@@ -1,0 +1,27 @@
+ARG ROS_DISTRO=humble
+ARG OWNER=tuwrobotics
+ARG PREFIX=mr
+ARG SOURCE_CONTAINER
+ARG BASE_CONTAINER=$PREFIX-$ROS_DISTRO-base 
+ARG ROOT_CONTAINER=$OWNER/$BASE_CONTAINER 
+
+FROM ${SOURCE_CONTAINER} as intermediate
+RUN /bin/bash -c "cd $PROJECT_DIR; make build-clean; make build-release"
+RUN /bin/bash -c "cd ${PROJECT_DIR}/ws00; rm -rf build src log"
+RUN /bin/bash -c "cd ${PROJECT_DIR}/ws01; rm -rf build src log"
+
+FROM $ROOT_CONTAINER
+ARG PROJECT_DIR
+ARG PROJECT_DIR_NAME
+ENV PROJECT_DIR=${PROJECT_DIR}
+ENV SOURCE_CONTAINER=${SOURCE_CONTAINER}
+ENV PROJECT_DIR_NAME=${PROJECT_DIR_NAME}
+
+USER root
+COPY --from=intermediate --chown=${MY_USER}:${MY_USER} ${PROJECT_DIR} ${PROJECT_DIR}
+COPY --from=intermediate --chown=${MY_USER}:${MY_USER} ${MY_HOME} ${MY_HOME}
+
+USER ${MY_USER}
+WORKDIR ${PROJECT_DIR}
+ENV HOME=${MY_HOME}
+CMD /bin/bash
