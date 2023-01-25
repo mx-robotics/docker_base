@@ -7,7 +7,7 @@ This repo hold docker files to crate a docker container with ROS2 (humble) and s
 * ROS NAV2 
 * GAZEBO
 
-For details checkout the Makefile
+For details checkout the Makefile with `make help`
 
 ## make
 A make file is used to create and run the container
