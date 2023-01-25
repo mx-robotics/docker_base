@@ -39,7 +39,7 @@ pull: push-pull push-pull
 docker_base:
 	git clone -b master git@github.com:mx-robotics/docker_base.git
 
-build-base: docker_base
+build-base: 
 	@docker build --rm -t ${OWNER}/${PREFIX}-${ROS_DISTRO}-base \
 															--build-arg OWNER=osrf \
 															--build-arg BASE_CONTAINER=ros:${ROS_DISTRO}-desktop \
@@ -50,7 +50,7 @@ build-base: docker_base
 													        --build-arg INSTALL_GAZEBO=true \
 													        --build-arg INSTALL_VNC=true \
 															--build-arg INSTALL_NAV2=true \
-															-f ./docker_base/Dockerfile-base .
+															-f ./Dockerfile-base .
 
 push-base:
 	@docker push ${OWNER}/${PREFIX}-${ROS_DISTRO}-base
@@ -93,7 +93,10 @@ rm-stopped:
 	@docker rm $(shell docker ps --filter status=exited -q)
 
 run:
-	@docker run -ti --rm --privileged --network="host" --env="DISPLAY" --add-host "${HOSTNAME}-${RUN}:127.0.0.1" --hostname ${HOSTNAME}-${RUN} --name ${HOSTNAME}-${RUN} \
+	@docker run -ti --rm --privileged --network="host" --env="DISPLAY" \
+	    --add-host "${PREFIX}-${RUN}:127.0.0.1"  \
+	    --hostname ${PREFIX}-${RUN}  \
+		--name ${PREFIX}-${RUN} \
 		-v ${HOME}/.sdformat:/home/robot/.sdformat \
 		-v ${HOME}/.ignition:/home/robot/.ignition \
 		-v ${HOME}/.gazebo:/home/robot/.gazebo \
@@ -102,7 +105,10 @@ run:
 	${OWNER}/${PREFIX}-${ROS_DISTRO}-${RUN}
 
 run-local:
-	@docker run -ti --rm --privileged --network="host" --env="DISPLAY" --add-host "${HOSTNAME}-${RUN}:127.0.0.1" --hostname ${HOSTNAME}-${RUN} --name ${HOSTNAME}-${RUN} \
+	@docker run -ti --rm --privileged --network="host" --env="DISPLAY" \
+	    --add-host "${PREFIX}-${RUN}:127.0.0.1"  \
+	    --hostname ${PREFIX}-${RUN}  \
+		--name ${PREFIX}-${RUN} \
 		-v ${HOME}/.sdformat:/home/robot/.sdformat \
 		-v ${HOME}/.ignition:/home/robot/.ignition \
 		-v ${HOME}/.gazebo:/home/robot/.gazebo \
@@ -110,3 +116,22 @@ run-local:
 		-v /dev/shm:/dev/shm \
 		-v ${PROJECT_DIR}:${PROJECT_DIR}  \
 	${OWNER}/${PREFIX}-${ROS_DISTRO}-${RUN}
+
+create:
+	@docker create --privileged --network="host" --env="DISPLAY" \
+	    --add-host "${PREFIX}-${RUN}:127.0.0.1"  \
+	    --hostname ${PREFIX}-${RUN}  \
+		--name ${PREFIX}-${RUN} \
+		--entrypoint /entrypoint-vnc.sh  \
+		-v /dev/shm:/dev/shm \
+		-v ${PROJECT_DIR}:${PROJECT_DIR}  \
+	${OWNER}/${PREFIX}-${ROS_DISTRO}-${RUN}
+
+start:
+	@docker start ${PREFIX}-${RUN}
+
+stop:
+	@docker stop ${PREFIX}-${RUN}
+
+rm:
+	@docker rm ${PREFIX}-${RUN}

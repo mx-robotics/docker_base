@@ -37,7 +37,8 @@ COPY ${SCRIPTS_DIR}/ ${INSTALL_DIR}/
 RUN chmod -R a+x ${INSTALL_DIR}
 # setup user
 RUN $INSTALL_DIR/add_user.sh
-# make the user owner of the home directory
+# install glow a markdown terminal viewer
+RUN dpkg -i ${INSTALL_DIR}/glow_1.4.1_linux_amd64.deb
 
 # copy bashrc
 COPY ${CONFIG_DIR}/bash/bashrc ${MY_HOME}/.bashrc
@@ -150,6 +151,10 @@ RUN echo "export PROJECTS_DIR=${PROJECTS_DIR}" >> ~/.bashrc && \
     echo "colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Debug" >> ~/.bash_history && \
     echo "cd ${PROJECTS_DIR}" >> ~/.bash_history
 
+# setup entrypoint
+COPY ./entrypoint.sh /
+COPY ./entrypoint-vnc.sh /
+
 USER ${MY_USER}
 RUN echo "export PROJECTS_DIR=${PROJECTS_DIR}" >> ~/.bashrc && \    
 	echo "export MY_PROJECT_DIR" >> ~/.bashrc && \ 
@@ -157,6 +162,10 @@ RUN echo "export PROJECTS_DIR=${PROJECTS_DIR}" >> ~/.bashrc && \
     echo "colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Debug" >> ~/.bash_history && \
     echo "cd ${PROJECTS_DIR}" >> ~/.bash_history
 
+COPY --chown=${MY_USER}:${MY_USER} ./base.md ${PROJECTS_DIR}/readme.md
+
+# setup entrypoint
+ENTRYPOINT ["/entrypoint.sh"]
 ENV TERM xterm-256color
 WORKDIR ${PROJECTS_DIR}
 ENV HOME=${MY_HOME}
