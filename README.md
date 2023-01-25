@@ -24,6 +24,8 @@ make run RUN=base
 ```
 
 ### persistent container with vnc
+
+Build your image and crate a container with our settings.
 ```
 git clone -b master https://github.com/mx-robotics/docker_base.git
 cd docker_base
@@ -32,4 +34,6 @@ make build
 make create RUN=base
 make start RUN=base
 ---> connect with an VNCClient https://sourceforge.net/projects/turbovnc/files/
+make stop RUN=base
 ```
+If you like to rebuild the image you have to delete the conainter first.
